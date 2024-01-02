@@ -7,6 +7,7 @@ type User struct {
 	Name     string `gorm:"name"`
 	Email    string `gorm:"email"`
 	Password string `gorm:"password"`
+	Limit    int64  `gorm:"limit"`
 }
 type Grocery struct {
 	gorm.Model

@@ -37,5 +37,5 @@ func MigrateDatabase() {
 		log.Fatal("There is error connecting to database ", err)
 		return
 	}
-	DB.AutoMigrate(&models.Grocery{},&models.User{})
+	DB.AutoMigrate(&models.Grocery{}, &models.User{})
 }
