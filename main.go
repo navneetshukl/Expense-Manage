@@ -15,7 +15,10 @@ func main() {
 	router.LoadHTMLGlob("templates/*")
 
 	router.POST("/", auth.Register)
-	router.GET("/",auth.Home)
+	router.GET("/", auth.Home)
+
+	router.GET("/user/login", auth.LoginPage)
+	router.POST("/user/login", auth.Login)
 
 	router.Run()
 

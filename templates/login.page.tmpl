@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <!-- Add your own custom styles here if needed -->
+</head>
+
+<body>
+
+    <section class="section">
+        <div class="container">
+            <div class="columns is-centered">
+                <div class="column is-one-third">
+                    <div class="box">
+                        <h1 class="title is-4 has-text-centered">Login</h1>
+
+                        <!-- Login Form -->
+                        <form method="post" action="/user/login">
+                            <div class="field">
+                                <label class="label">Email</label>
+                                <div class="control has-icons-left">
+                                    <input class="input" type="email" placeholder="Your Email" name="email">
+                                    <span class="icon is-small is-left">
+                                        <i class="fas fa-envelope"></i>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <label class="label">Password</label>
+                                <div class="control has-icons-left">
+                                    <input class="input" type="password" placeholder="Your Password" name="password">
+                                    <span class="icon is-small is-left">
+                                        <i class="fas fa-lock"></i>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <div class="control">
+                                    <button class="button is-primary is-fullwidth">Login</button>
+                                </div>
+                            </div>
+                        </form>
+
+                        <!-- Additional Options -->
+                        <div class="has-text-centered">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</body>
+
+</html>
