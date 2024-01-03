@@ -3,8 +3,11 @@ package auth
 import (
 	"log"
 	"net/http"
+	"os"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/navneetshukl/database"
 	"github.com/navneetshukl/models"
 	"golang.org/x/crypto/bcrypt"
@@ -43,7 +46,15 @@ func Register(c *gin.Context) {
 
 	}
 
-	db.Create(&user)
+	succ := db.Create(&user)
+
+	if succ.Error != nil {
+		log.Println("Error in storing to database in Register function", err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "There is some internal error.Please try after sometime",
+		})
+		return
+	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "User Registered Successfully",
@@ -94,7 +105,26 @@ func Login(c *gin.Context) {
 		})
 		return
 	}
+
+	//* Implement JWT authentication method
+
+	secret := os.Getenv("SECRET")
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"sub": loginData.ID,
+		"exp": time.Now().Add(time.Hour * 24 * 30).Unix(),
+	})
+	tokenString, err := token.SignedString([]byte(secret))
+
+	if err != nil {
+		log.Println("Error in signing the token ", err)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Some Error Occured.Please try again",
+		})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"message": "User Login Successfully",
+		"token":   tokenString,
 	})
 }
