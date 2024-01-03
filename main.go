@@ -19,6 +19,7 @@ func main() {
 
 	router.GET("/user/login", auth.LoginPage)
 	router.POST("/user/login", auth.Login)
+	router.GET("/valid",auth.IsValid)
 
 	router.Run()
 

@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -111,7 +112,7 @@ func Login(c *gin.Context) {
 	secret := os.Getenv("SECRET")
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"sub": loginData.ID,
+		"sub": email,
 		"exp": time.Now().Add(time.Hour * 24 * 30).Unix(),
 	})
 	tokenString, err := token.SignedString([]byte(secret))
@@ -123,8 +124,21 @@ func Login(c *gin.Context) {
 		})
 		return
 	}
+
+	//? Save this JWT token to Cookie
+
+	c.SetSameSite(http.SameSiteLaxMode)
+	c.SetCookie("Authorization", tokenString, 3600*24*30, "", "", false, true)
+
 	c.JSON(http.StatusOK, gin.H{
 		"message": "User Login Successfully",
-		"token":   tokenString,
+	})
+
+}
+
+func IsValid(c *gin.Context) {
+	fmt.Println("Inside the valid routes")
+	c.JSON(200, gin.H{
+		"message": "I am logged in",
 	})
 }
