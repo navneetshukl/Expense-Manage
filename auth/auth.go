@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -128,17 +127,10 @@ func Login(c *gin.Context) {
 	//? Save this JWT token to Cookie
 
 	c.SetSameSite(http.SameSiteLaxMode)
-	c.SetCookie("Authorization", tokenString, 3600*24*30, "", "", false, true)
+	c.SetCookie("Authorization", tokenString, int(time.Hour*24*30), "/", "", false, true)
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "User Login Successfully",
 	})
 
-}
-
-func IsValid(c *gin.Context) {
-	fmt.Println("Inside the valid routes")
-	c.JSON(200, gin.H{
-		"message": "I am logged in",
-	})
 }

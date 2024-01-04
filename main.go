@@ -4,11 +4,12 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/navneetshukl/auth"
 	"github.com/navneetshukl/database"
+	"github.com/navneetshukl/middleware"
+	"github.com/navneetshukl/routes"
 )
 
 func init() {
 	database.MigrateDatabase()
-
 }
 func main() {
 	router := gin.Default()
@@ -19,7 +20,7 @@ func main() {
 
 	router.GET("/user/login", auth.LoginPage)
 	router.POST("/user/login", auth.Login)
-	router.GET("/valid",auth.IsValid)
+	router.GET("/valida", middleware.Authenticate, routes.Validate)
 
 	router.Run()
 
