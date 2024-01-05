@@ -20,7 +20,8 @@ func main() {
 
 	router.GET("/user/login", auth.LoginPage)
 	router.POST("/user/login", auth.Login)
-	router.GET("/valida", middleware.Authenticate, routes.Validate)
+
+	router.GET("/expense", middleware.Authenticate,routes.Home)
 
 	router.Run()
 
