@@ -134,3 +134,12 @@ func Login(c *gin.Context) {
 	})
 
 }
+
+// ! Signup will signup the user
+func Signup(c *gin.Context) {
+	c.SetSameSite(http.SameSiteLaxMode)
+	c.SetCookie("Authorization", "",-1, "/", "", false, true)
+
+	log.Println("I am on signup page")
+	c.Redirect(http.StatusSeeOther, "/user/login")
+}

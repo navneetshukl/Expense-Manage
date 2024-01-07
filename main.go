@@ -20,6 +20,7 @@ func main() {
 
 	router.GET("/user/login", auth.LoginPage)
 	router.POST("/user/login", auth.Login)
+	router.GET("/user/signup", auth.Signup)
 
 	router.GET("/expense", middleware.Authenticate, routes.Home)
 	router.GET("/:param/add", middleware.Authenticate, routes.Add)
