@@ -7,10 +7,10 @@ type User struct {
 	Name     string `gorm:"name"`
 	Email    string `gorm:"unique;email"`
 	Password string `gorm:"password"`
-	Limit    string  `gorm:"limit"`
+	Limit    string `gorm:"limit"`
 }
 type Grocery struct {
 	gorm.Model
-	Price int64  `gorm:"price"`
-	Email string `gorm:"email"`
+	Expense string `gorm:"expense"`
+	Email   string `gorm:"email"`
 }
