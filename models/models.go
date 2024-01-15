@@ -19,3 +19,24 @@ type Grocery struct {
 	Email   string    `gorm:"email"`
 	Date    time.Time `gorm:"type:date"`
 }
+
+type Medicine struct {
+	gorm.Model
+	Expense string    `gorm:"expense"`
+	Email   string    `gorm:"email"`
+	Date    time.Time `gorm:"type:date"`
+}
+
+type Transportation struct {
+	gorm.Model
+	Expense string    `gorm:"expense"`
+	Email   string    `gorm:"email"`
+	Date    time.Time `gorm:"type:date"`
+}
+
+type HomeMaintanance struct {
+	gorm.Model
+	Expense string    `gorm:"expense"`
+	Email   string    `gorm:"email"`
+	Date    time.Time `gorm:"type:date"`
+}

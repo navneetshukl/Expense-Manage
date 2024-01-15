@@ -23,38 +23,18 @@ func Home(c *gin.Context) {
 		return
 	}
 
-	DB, err := database.ConnectToDatabase()
+	expenses, err := helpers.GetExpenses(email.(string))
+
 	if err != nil {
-		log.Println("Error in connecting to database ", err)
+		log.Println("Error in getting the expenses of all the category ", err)
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "Some Error occured.Please retry after sometime",
+			"error": "Some error occured.Please retry again",
 		})
-		return
 	}
 
-	var grocData []models.Grocery
-
-	todayDate := time.Now()
-	yesterdayData := todayDate.AddDate(0, 0, -1)
-
-	var grocExpense int
-	grocExpense = 0
-
-	DB.Where("email=? and date<=? and date>=?", email.(string), todayDate, yesterdayData).Find(&grocData)
-
-	if len(grocData) > 0 {
-		for _, val := range grocData {
-			exp, _ := helpers.StringToInt(val.Expense)
-			grocExpense += exp
-		}
+	for _, val := range expenses {
+		fmt.Println(val)
 	}
-
-	fmt.Println("Length of Grocery data ", len(grocData))
-
-	fmt.Println("Grocery Expense is ", grocExpense)
-
-	fmt.Println("Today date is ", todayDate)
-	fmt.Println("Yesterday date is ", yesterdayData)
 
 	categories := []string{"grocerry", "medicine"}
 	c.HTML(http.StatusOK, "home.page.tmpl", gin.H{
@@ -73,6 +53,9 @@ func Add(c *gin.Context) {
 
 // ! AddPrice function will enter the expense for particular category
 func AddExpenseForToday(c *gin.Context) {
+	param := c.Param("param")
+
+	fmt.Println("Param from AddExpenseForToday is ", param)
 	price := c.PostForm("price")
 	email, ok := c.Get("user")
 	if !ok {
