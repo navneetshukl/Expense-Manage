@@ -95,3 +95,64 @@ func GetExpenses(email string) ([]int, error) {
 	return expenses, nil
 
 }
+
+// ! AddExpenseForCategory function will enter the expense for particular category to database
+func AddExpenseForCategory(param, email, price string) error {
+	db, err := database.ConnectToDatabase()
+	if err != nil {
+		return err
+	}
+
+	if param == "grocerry" {
+
+		groc := models.Grocery{
+			Email:   email,
+			Expense: price,
+			Date:    time.Now(),
+		}
+
+		res := db.Create(&groc)
+		if res.Error != nil {
+			return res.Error
+		}
+
+	} else if param == "medicine" {
+
+		med := models.Medicine{
+			Email:   email,
+			Expense: price,
+			Date:    time.Now(),
+		}
+		res := db.Create(&med)
+		if res.Error != nil {
+			return res.Error
+		}
+
+	} else if param == "transportation" {
+
+		trans := models.Transportation{
+			Email:   email,
+			Expense: price,
+			Date:    time.Now(),
+		}
+		res := db.Create(&trans)
+		if res.Error != nil {
+			return res.Error
+		}
+
+	} else if param == "house-maintainance" {
+
+		home := models.HomeMaintanance{
+			Email:   email,
+			Expense: price,
+			Date:    time.Now(),
+		}
+
+		res := db.Create(&home)
+		if res.Error != nil {
+			return res.Error
+		}
+
+	}
+	return nil
+}

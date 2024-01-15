@@ -4,12 +4,9 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/navneetshukl/database"
 	"github.com/navneetshukl/helpers"
-	"github.com/navneetshukl/models"
 )
 
 func Home(c *gin.Context) {
@@ -62,25 +59,11 @@ func AddExpenseForToday(c *gin.Context) {
 		c.Redirect(http.StatusSeeOther, "/user/login")
 		return
 	}
-	db, err := database.ConnectToDatabase()
+	err := helpers.AddExpenseForCategory(param, email.(string), price)
 	if err != nil {
-		log.Println("Error in connecting to database ", err)
+		log.Println("Error in Inserting to database ", err)
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "Some error occured.Please retry again",
-		})
-	}
-	grocData := models.Grocery{
-		Email:   email.(string),
-		Date:    time.Now(),
-		Expense: price,
-	}
-
-	result := db.Create(&grocData)
-
-	if result.Error != nil {
-		log.Println("Error in inserting to database ", result.Error)
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "Some Error Occur.Please retry after sometime",
+			"error": "Some Error Occur.Please retry again",
 		})
 		return
 	}
