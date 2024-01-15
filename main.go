@@ -24,7 +24,7 @@ func main() {
 
 	router.GET("/expense", middleware.Authenticate, routes.Home)
 	router.GET("/:param/add", middleware.Authenticate, routes.Add)
-	//router.POST("/:param/add", middleware.Authenticate, routes.AddPrice)
+	router.POST("/:param/add", middleware.Authenticate, routes.AddExpenseForToday)
 
 	router.Run()
 
