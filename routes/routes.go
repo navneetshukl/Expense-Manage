@@ -21,6 +21,11 @@ func Home(c *gin.Context) {
 	}
 
 	expenses, err := helpers.GetExpenses(email.(string))
+	total := 0
+
+	for _, val := range expenses {
+		total += val
+	}
 
 	if err != nil {
 		log.Println("Error in getting the expenses of all the category ", err)
@@ -28,11 +33,22 @@ func Home(c *gin.Context) {
 			"error": "Some error occured.Please retry again",
 		})
 	}
+
+	limit, err := helpers.GetMaxLimit(email.(string))
+	if err != nil {
+		log.Println("Error in getting the maximum limit of particular user ", err)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Some error occured.Please try again",
+		})
+		return
+	}
 	c.HTML(http.StatusOK, "home.page.tmpl", gin.H{
-		"Grocerry":          expenses[0],
-		"Transportation":    expenses[1],
+		"Grocerry":         expenses[0],
+		"Transportation":   expenses[1],
 		"HouseMaintanance": expenses[2],
-		"Medicine":          expenses[3],
+		"Medicine":         expenses[3],
+		"Limit":            limit,
+		"Total":            total,
 	})
 }
 

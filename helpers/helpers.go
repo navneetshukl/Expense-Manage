@@ -54,10 +54,10 @@ func GetExpenses(email string) ([]int, error) {
 
 	grocExpense, medExpense, homeExpense, transExpense := 0, 0, 0, 0
 
-	res1 := db.Where("email=? and date>=? and date<=?", email, startDate,endDate).Find(&grocData)
-	res2 := db.Where("email=? and date>=? and date<=?", email, startDate,endDate).Find(&medData)
-	res3 := db.Where("email=? and date>=? and date<=?", email, startDate,endDate).Find(&homeData)
-	res4 := db.Where("email=? and date>=? and date<=?", email, startDate,endDate).Find(&transData)
+	res1 := db.Where("email=? and date>=? and date<=?", email, startDate, endDate).Find(&grocData)
+	res2 := db.Where("email=? and date>=? and date<=?", email, startDate, endDate).Find(&medData)
+	res3 := db.Where("email=? and date>=? and date<=?", email, startDate, endDate).Find(&homeData)
+	res4 := db.Where("email=? and date>=? and date<=?", email, startDate, endDate).Find(&transData)
 
 	if res1.Error != nil || res2.Error != nil || res3.Error != nil || res4.Error != nil {
 		log.Println("Error from Groccery table is : ", res1.Error)
@@ -163,4 +163,29 @@ func AddExpenseForCategory(param, email, price string) error {
 
 	}
 	return nil
+}
+
+// ! GetMaxLimit function will return the maximum limit of the user
+func GetMaxLimit(email string) (int, error) {
+	var maxLimit int
+	maxLimit = 0
+
+	db, err := database.ConnectToDatabase()
+	if err != nil {
+		return maxLimit, err
+	}
+
+	user := models.User{}
+
+	res := db.Where("email=?", email).First(&user)
+	if res.Error != nil {
+		return maxLimit, res.Error
+	}
+	limit := user.Limit
+	maxLimit, err = StringToInt(limit)
+	if err != nil {
+		return maxLimit, err
+	}
+	return maxLimit, nil
+
 }
