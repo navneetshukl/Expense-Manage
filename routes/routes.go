@@ -92,3 +92,7 @@ func AddExpenseForToday(c *gin.Context) {
 	c.Redirect(http.StatusSeeOther, "/expense")
 
 }
+
+func ExtraInformationHTMLPage(c *gin.Context) {
+	c.HTML(http.StatusOK, "extra.page.tmpl", nil)
+}

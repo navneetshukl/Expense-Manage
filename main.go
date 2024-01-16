@@ -28,6 +28,8 @@ func main() {
 	router.GET("/:param/add", middleware.Authenticate, routes.Add)
 	router.POST("/:param/add", middleware.Authenticate, routes.AddExpenseForToday)
 
+	router.GET("/more", middleware.Authenticate, routes.ExtraInformationHTMLPage)
+
 	router.Run()
 
 }
