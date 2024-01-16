@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/navneetshukl/helpers"
+	"github.com/navneetshukl/services"
 )
 
 func Home(c *gin.Context) {
@@ -50,6 +51,14 @@ func Home(c *gin.Context) {
 		"Limit":            limit,
 		"Total":            total,
 	})
+
+	expLimit := (limit * 90) / 100
+
+	if total >= expLimit {
+		_ = services.SendMail(email.(string))
+
+	}
+
 }
 
 // ! Add function will show the page for adding the expense
