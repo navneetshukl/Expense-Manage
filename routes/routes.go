@@ -28,14 +28,11 @@ func Home(c *gin.Context) {
 			"error": "Some error occured.Please retry again",
 		})
 	}
-
-	for _, val := range expenses {
-		fmt.Println(val)
-	}
-
-	categories := []string{"grocerry", "medicine"}
 	c.HTML(http.StatusOK, "home.page.tmpl", gin.H{
-		"category": categories,
+		"Grocerry":          expenses[0],
+		"Transportation":    expenses[1],
+		"HouseMaintanance": expenses[2],
+		"Medicine":          expenses[3],
 	})
 }
 

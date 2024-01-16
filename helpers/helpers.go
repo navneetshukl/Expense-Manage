@@ -40,8 +40,12 @@ func GetExpenses(email string) ([]int, error) {
 		return expenses, err
 	}
 
-	todayDate := time.Now()
-	yesterdayData := todayDate.AddDate(0, 0, -1)
+	now := time.Now()
+
+	startDate := time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, now.Location())
+	endDate := startDate.AddDate(0, 1, -1)
+	fmt.Println("First day of the month:", startDate)
+	fmt.Println("Last day of the month:", endDate)
 
 	var grocData []models.Grocery
 	var medData []models.Medicine
@@ -50,10 +54,10 @@ func GetExpenses(email string) ([]int, error) {
 
 	grocExpense, medExpense, homeExpense, transExpense := 0, 0, 0, 0
 
-	res1 := db.Where("email=? and date>=? and date<=?", email, yesterdayData, todayDate).Find(&grocData)
-	res2 := db.Where("email=? and date>=? and date<=?", email, yesterdayData, todayDate).Find(&medData)
-	res3 := db.Where("email=? and date>=? and date<=?", email, yesterdayData, todayDate).Find(&homeData)
-	res4 := db.Where("email=? and date>=? and date<=?", email, yesterdayData, todayDate).Find(&transData)
+	res1 := db.Where("email=? and date>=? and date<=?", email, startDate,endDate).Find(&grocData)
+	res2 := db.Where("email=? and date>=? and date<=?", email, startDate,endDate).Find(&medData)
+	res3 := db.Where("email=? and date>=? and date<=?", email, startDate,endDate).Find(&homeData)
+	res4 := db.Where("email=? and date>=? and date<=?", email, startDate,endDate).Find(&transData)
 
 	if res1.Error != nil || res2.Error != nil || res3.Error != nil || res4.Error != nil {
 		log.Println("Error from Groccery table is : ", res1.Error)
@@ -69,29 +73,33 @@ func GetExpenses(email string) ([]int, error) {
 			exp, _ := StringToInt(val.Expense)
 			grocExpense += exp
 		}
-		expenses = append(expenses, grocExpense)
+
 	}
 	if len(medData) > 0 {
 		for _, val := range medData {
 			exp, _ := StringToInt(val.Expense)
 			medExpense += exp
 		}
-		expenses = append(expenses, medExpense)
+
 	}
 	if len(homeData) > 0 {
 		for _, val := range homeData {
 			exp, _ := StringToInt(val.Expense)
 			homeExpense += exp
 		}
-		expenses = append(expenses, homeExpense)
+
 	}
 	if len(transData) > 0 {
 		for _, val := range transData {
 			exp, _ := StringToInt(val.Expense)
 			transExpense += exp
 		}
-		expenses = append(expenses, transExpense)
+
 	}
+	expenses = append(expenses, grocExpense)
+	expenses = append(expenses, transExpense)
+	expenses = append(expenses, homeExpense)
+	expenses = append(expenses, medExpense)
 	return expenses, nil
 
 }
@@ -140,7 +148,7 @@ func AddExpenseForCategory(param, email, price string) error {
 			return res.Error
 		}
 
-	} else if param == "house-maintainance" {
+	} else if param == "house-maintanance" {
 
 		home := models.HomeMaintanance{
 			Email:   email,

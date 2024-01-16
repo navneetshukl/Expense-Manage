@@ -10,8 +10,10 @@ import (
 
 func init() {
 	database.MigrateDatabase()
+
 }
 func main() {
+
 	router := gin.Default()
 	router.LoadHTMLGlob("templates/*")
 

@@ -111,6 +111,7 @@
 </html> -->
 
 
+
 {{template "base" .}}
 {{define "title"}}Expense{{end}}
 {{define "content"}}
@@ -125,19 +126,45 @@
                         <th>Action</th>
                     </tr>
                 </thead>
-                {{ range .category}}
+               
                 <tbody>
                     <tr>
-                        <td>{{.}}</td>
-                        <td>0</td>
+                        <td>Grocerry</td>
+                        <td>{{.Grocerry}}</td>
                         <td>
                             <!-- <button  class="button is-primary is-small">Add</button> -->
-                            <a class="button is-primary is-small" href="/{{.}}/add">Add</a>
+                            <a class="button is-primary is-small" href="/grocerry/add">Add</a>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Transportation</td>
+                        <td>{{.Transportation}}</td>
+                        <td>
+                            <!-- <button  class="button is-primary is-small">Add</button> -->
+                            <a class="button is-primary is-small" href="/transportation/add">Add</a>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>House Maintanance</td>
+                        <td>{{.HouseMaintanance}}</td>
+                        <td>
+                            <!-- <button  class="button is-primary is-small">Add</button> -->
+                            <a class="button is-primary is-small" href="/house-maintanance/add">Add</a>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Medicine</td>
+                        <td>{{.Medicine}}</td>
+                        <td>
+                            <!-- <button  class="button is-primary is-small">Add</button> -->
+                            <a class="button is-primary is-small" href="/medicine/add">Add</a>
 
                         </td>
                     </tr>
                 </tbody>
-                {{end}}
             </table>
         </div>
     </section>
