@@ -4,10 +4,12 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/navneetshukl/helpers"
 	"github.com/navneetshukl/services"
+	"google.golang.org/genproto/googleapis/type/month"
 )
 
 func Home(c *gin.Context) {
@@ -95,4 +97,32 @@ func AddExpenseForToday(c *gin.Context) {
 
 func ExtraInformationHTMLPage(c *gin.Context) {
 	c.HTML(http.StatusOK, "extra.page.tmpl", nil)
+}
+
+func GetPreviousHistory(c *gin.Context) {
+	startMonth := c.PostForm("startmonth")
+	endMonth := c.PostForm("endmonth")
+
+	startMonthParse,err:=time.Parse("January",startMonth)
+	if err!=nil{
+		log.Println("Error in getting the time ",err)
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"error":"Some error occur.Please retry again",
+		})
+		return
+
+	}
+	endMonthParse,err:=time.Parse("January",startMonth)
+	if err!=nil{
+		log.Println("Error in getting the time ",err)
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"error":"Some error occur.Please retry again",
+		})
+		return
+
+	}
+
+	currentYear := time.Now().Year()
+	startDate := time.Date(currentYear, startMonthParse.Month(), 1, 0, 0, 0, 0, time.UTC)
+	endDate := startDate.AddDate(0, 1, -1)
 }
