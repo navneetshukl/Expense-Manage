@@ -115,7 +115,23 @@ func GetPreviousExpense(c *gin.Context) {
 		})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{
+	/* c.JSON(http.StatusOK, gin.H{
 		"expense": data,
+	}) */
+
+	name, err := helpers.GetName(email.(string))
+	if err != nil {
+		log.Println("Error in getting the name ", err)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "There is some error occur.please retry",
+		})
+		return
+	}
+
+	c.HTML(http.StatusOK, "showprevexpense.page.tmpl", gin.H{
+		"expense":  data,
+		"name":     name,
+		"category": category,
+		"month":    month,
 	})
 }

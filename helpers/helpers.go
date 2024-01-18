@@ -265,3 +265,19 @@ func GetExpenseForAnyMonth(month, category, email string) (interface{}, error) {
 
 	}
 }
+
+// !GetName function return the name of particular email
+func GetName(email string) (string, error) {
+	db, err := database.ConnectToDatabase()
+	if err != nil {
+		log.Println("Error in connecting to the database ", err)
+		return "", nil
+	}
+	var user models.User
+
+	res := db.Select("name").Where("email =?", email).First(&user)
+	if res.Error != nil {
+		return "", err
+	}
+	return user.Name, nil
+}
