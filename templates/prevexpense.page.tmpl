@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
+    <title>Month and Category Selector</title>
+</head>
+
+<body>
+    <section class="section">
+        <div class="container">
+            <h1 class="title">Select a Month and Category</h1>
+
+            <form action="/expense/history" method="post">
+                <div class="columns">
+                    <div class="column">
+                        <div class="field">
+                            <label class="label">Select a Month</label>
+                            <div class="control">
+                                <div class="select">
+                                    <select name="month">
+                                        <option value="January">January</option>
+                                        <option value="February">February</option>
+                                        <option value="March">March</option>
+                                        <option value="April">April</option>
+                                        <option value="May">May</option>
+                                        <option value="June">June</option>
+                                        <option value="July">July</option>
+                                        <option value="August">August</option>
+                                        <option value="September">September</option>
+                                        <option value="October">October</option>
+                                        <option value="November">November</option>
+                                        <option value="December">December</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="column">
+                        <div class="field">
+                            <label class="label">Select a Category</label>
+                            <div class="control">
+                                <div class="select">
+                                    <select name="category">
+                                        <option value="Grocerry">Grocerry</option>
+                                        <option value="Medicine">Medicine</option>
+                                        <option value="Transportation">Transportation</option>
+                                        <option value="House-Maintanance">House-Maintanance</option>
+                                            
+
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="control">
+                        <button type="submit" class="button is-primary">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</body>
+
+</html>

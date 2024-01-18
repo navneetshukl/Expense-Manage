@@ -29,6 +29,7 @@ func main() {
 	router.POST("/:param/add", middleware.Authenticate, routes.AddExpenseForToday)
 
 	router.GET("/more", middleware.Authenticate, routes.ExtraInformationHTMLPage)
+	router.POST("/expense/history", middleware.Authenticate, routes.GetPreviousExpense)
 
 	router.Run()
 

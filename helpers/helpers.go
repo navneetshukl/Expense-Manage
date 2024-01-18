@@ -189,3 +189,79 @@ func GetMaxLimit(email string) (int, error) {
 	return maxLimit, nil
 
 }
+
+// ! GetExpenseForAnyMonth will get the expense of any month
+func GetExpenseForAnyMonth(month, category, email string) (interface{}, error) {
+	date, err := time.Parse("January", month)
+	if err != nil {
+		return nil, err
+	}
+	currentYear := time.Now().Year()
+	startDate := time.Date(currentYear, date.Month(), 1, 0, 0, 0, 0, date.Location())
+	endDate := startDate.AddDate(0, 1, 0).Add(-time.Second)
+
+	DB, err := database.ConnectToDatabase()
+	if err != nil {
+		log.Println("Error in connecting to database ", err)
+		return nil, err
+	}
+
+	fmt.Println("Starartt ", startDate)
+	fmt.Println("Endddd ", endDate)
+
+	if category == "Groccery" {
+
+		var grocData []models.Grocery
+		res := DB.Where("email=? and date>=? and date<=?", email, startDate, endDate).Find(&grocData)
+
+		if res.RowsAffected == 0 {
+			return grocData, nil
+		} else if res.Error != nil {
+			return grocData, res.Error
+		} else {
+			return grocData, nil
+
+		}
+
+	} else if category == "Transportation" {
+		var transData []models.Transportation
+		res := DB.Where("email=? and date>=? and date<=?", email, startDate, endDate).Find(&transData)
+
+		if res.RowsAffected == 0 {
+			return transData, nil
+		} else if res.Error != nil {
+			return transData, res.Error
+		} else {
+			return transData, nil
+
+		}
+
+	} else if category == "Medicine" {
+
+		var medData []models.Medicine
+		res := DB.Where("email=? and date>=? and date<=?", email, startDate, endDate).Find(&medData)
+
+		if res.RowsAffected == 0 {
+			return medData, nil
+		} else if res.Error != nil {
+			return medData, res.Error
+		} else {
+			return medData, nil
+
+		}
+
+	} else {
+		var homeData []models.HomeMaintanance
+		res := DB.Where("email=? and date>=? and date<=?", email, startDate, endDate).Find(&homeData)
+
+		if res.RowsAffected == 0 {
+			return homeData, nil
+		} else if res.Error != nil {
+			return homeData, res.Error
+		} else {
+			return homeData, nil
+
+		}
+
+	}
+}
