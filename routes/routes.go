@@ -57,7 +57,7 @@ func Home(c *gin.Context) {
 	expLimit := (limit * 90) / 100
 
 	if total >= expLimit {
-		//_ = services.SendMail(email.(string))
+		_ = services.SendMail(email.(string))
 
 	}
 
