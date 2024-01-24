@@ -1,12 +1,14 @@
 package routes
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/navneetshukl/helpers"
+	"github.com/navneetshukl/models"
 	"github.com/navneetshukl/services"
 )
 
@@ -55,7 +57,7 @@ func Home(c *gin.Context) {
 	expLimit := (limit * 90) / 100
 
 	if total >= expLimit {
-		_ = services.SendMail(email.(string))
+		//_ = services.SendMail(email.(string))
 
 	}
 
@@ -97,6 +99,9 @@ func ExtraInformationHTMLPage(c *gin.Context) {
 	c.HTML(http.StatusOK, "prevexpense.page.tmpl", nil)
 }
 
+var month string
+var category string
+
 func GetPreviousExpense(c *gin.Context) {
 	email, ok := c.Get("user")
 	if !ok {
@@ -104,8 +109,8 @@ func GetPreviousExpense(c *gin.Context) {
 		return
 	}
 
-	month := c.PostForm("month")
-	category := c.PostForm("category")
+	month = c.PostForm("month")
+	category = c.PostForm("category")
 
 	data, err := helpers.GetExpenseForAnyMonth(month, category, email.(string))
 	if err != nil {
@@ -133,5 +138,49 @@ func GetPreviousExpense(c *gin.Context) {
 		"name":     name,
 		"category": category,
 		"month":    month,
+	})
+}
+
+// ! ShowPdf function will print the Expense of that particular month
+func ShowPdf(c *gin.Context) {
+	email, ok := c.Get("user")
+	if !ok {
+		c.Redirect(http.StatusSeeOther, "/user/login")
+		return
+	}
+	data, err := helpers.GetExpenseForAnyMonth(month, category, email.(string))
+	if err != nil {
+		log.Println("Error in getting the given month data ", err)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Some error occured.Please retry again",
+		})
+		return
+	}
+	var pdfData []models.PDFDetails
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		log.Println("Error in Converting to JSON ", err)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Some error occured.Please retry again",
+		})
+		return
+
+	}
+
+	err = json.Unmarshal(jsonData, &pdfData)
+	if err != nil {
+		log.Println("Error in Unmarshaling from JSON ", err)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Some error occured.Please retry again",
+		})
+		return
+	}
+
+	fmt.Println("Pdf Data is ", pdfData[0])
+
+	services.ShowPDF(c,pdfData)
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "This page will print the pdf",
 	})
 }

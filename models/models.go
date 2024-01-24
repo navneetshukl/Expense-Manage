@@ -40,3 +40,13 @@ type HomeMaintanance struct {
 	Email   string    `gorm:"email"`
 	Date    time.Time `gorm:"type:date"`
 }
+
+type PDFDetails struct {
+	ID        int        `json:"ID"`
+	CreatedAt time.Time  `json:"CreatedAt"`
+	UpdatedAt time.Time  `json:"UpdatedAt"`
+	DeletedAt *time.Time `json:"DeletedAt,omitempty"`
+	Expense   string     `json:"Expense"`
+	Email     string     `json:"Email"`
+	Date      time.Time  `json:"Date"`
+}

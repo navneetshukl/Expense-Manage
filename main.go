@@ -31,6 +31,8 @@ func main() {
 	router.GET("/more", middleware.Authenticate, routes.ExtraInformationHTMLPage)
 	router.POST("/expense/history", middleware.Authenticate, routes.GetPreviousExpense)
 
+	router.GET("/expense/pdf", middleware.Authenticate, routes.ShowPdf)
+
 	router.Run()
 
 }
