@@ -175,12 +175,28 @@ func ShowPdf(c *gin.Context) {
 		})
 		return
 	}
+	name, err := helpers.GetName(email.(string))
+	if err != nil {
+		log.Println("Error in Getting the name ", err)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Some error occured.Please retry again",
+		})
+		return
+	}
 
-	fmt.Println("Pdf Data is ", pdfData[0])
+	/* fmt.Println("Pdf Data is ", pdfData[0]) */
 
-	services.ShowPDF(c,pdfData)
+	err = services.ShowPDF(c, pdfData, name, category, month)
+	if err != nil {
+		log.Println("Error in Printing the PDF ", err)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Some error occured.Please retry again",
+		})
+		return
+
+	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"message": "This page will print the pdf",
+		"message": "Your PDF is printed successfully",
 	})
 }
