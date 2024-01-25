@@ -1,15 +1,21 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/gin-gonic/gin"
 	"github.com/navneetshukl/auth"
 	"github.com/navneetshukl/database"
 	"github.com/navneetshukl/middleware"
+	"github.com/navneetshukl/redis"
 	"github.com/navneetshukl/routes"
 )
 
 func init() {
 	database.MigrateDatabase()
+	redis.InsertIntoRedis("name", "navneet")
+	data := redis.GetFromRedis("name")
+	fmt.Println("Data from redis is ", data)
 
 }
 func main() {
