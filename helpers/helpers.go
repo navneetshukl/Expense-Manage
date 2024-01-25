@@ -209,6 +209,8 @@ func GetExpenseForAnyMonth(month, category, email string) (interface{}, error) {
 	fmt.Println("Starartt ", startDate)
 	fmt.Println("Endddd ", endDate)
 
+	fmt.Println("Email from the 'GetPreviousExpense' is ",email)
+
 	if category == "Groccery" {
 
 		var grocData []models.Grocery

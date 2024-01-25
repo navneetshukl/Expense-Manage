@@ -6,6 +6,7 @@ import (
 	"github.com/go-redis/redis"
 )
 
+// ! RedisConnection function connect redis with docker
 func RedisConnection() *redis.Client {
 
 	client := redis.NewClient(&redis.Options{

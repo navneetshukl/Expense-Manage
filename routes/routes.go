@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/navneetshukl/helpers"
 	"github.com/navneetshukl/models"
+	"github.com/navneetshukl/redis"
 	"github.com/navneetshukl/services"
 )
 
@@ -102,6 +103,7 @@ func ExtraInformationHTMLPage(c *gin.Context) {
 var month string
 var category string
 
+// !  GetPreviousExpense will give the expense history for particular month
 func GetPreviousExpense(c *gin.Context) {
 	email, ok := c.Get("user")
 	if !ok {
@@ -111,6 +113,9 @@ func GetPreviousExpense(c *gin.Context) {
 
 	month = c.PostForm("month")
 	category = c.PostForm("category")
+
+	fmt.Println("Month in 'GetPreviousExpense' is ", month)
+	fmt.Println("Category in 'GetPreviousExpense' is ", category)
 
 	data, err := helpers.GetExpenseForAnyMonth(month, category, email.(string))
 	if err != nil {
@@ -124,7 +129,11 @@ func GetPreviousExpense(c *gin.Context) {
 		"expense": data,
 	}) */
 
-	name, err := helpers.GetName(email.(string))
+	//name, err := helpers.GetName(email.(string))
+	redisData, err := redis.GetUserDetailsFromRedis()
+	fmt.Println("Expense data from 'GetPreviousExpense' is ", data)
+	fmt.Println("Name from 'GetPreviousExpense' ", redisData["name"])
+
 	if err != nil {
 		log.Println("Error in getting the name ", err)
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -135,7 +144,7 @@ func GetPreviousExpense(c *gin.Context) {
 
 	c.HTML(http.StatusOK, "showprevexpense.page.tmpl", gin.H{
 		"expense":  data,
-		"name":     name,
+		"name":     redisData["name"],
 		"category": category,
 		"month":    month,
 	})
@@ -175,7 +184,8 @@ func ShowPdf(c *gin.Context) {
 		})
 		return
 	}
-	name, err := helpers.GetName(email.(string))
+	//name, err := helpers.GetName(email.(string))
+	redisData, err := redis.GetUserDetailsFromRedis()
 	if err != nil {
 		log.Println("Error in Getting the name ", err)
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -186,7 +196,7 @@ func ShowPdf(c *gin.Context) {
 
 	/* fmt.Println("Pdf Data is ", pdfData[0]) */
 
-	err = services.ShowPDF(c, pdfData, name, category, month)
+	err = services.ShowPDF(c, pdfData, redisData["name"], category, month)
 	if err != nil {
 		log.Println("Error in Printing the PDF ", err)
 		c.JSON(http.StatusInternalServerError, gin.H{
