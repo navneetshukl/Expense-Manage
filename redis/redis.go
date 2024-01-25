@@ -1,8 +1,7 @@
 package redis
 
 import (
-	"fmt"
-	"time"
+	"log"
 
 	"github.com/go-redis/redis"
 )
@@ -17,30 +16,33 @@ func RedisConnection() *redis.Client {
 	return client
 }
 
-func InsertIntoRedis(key string, value interface{}) {
+// ! StoreUserDetailInRedis function will store the user details in key,value pair in redis
+func StoreUserDetailInRedis(userDetails map[string]interface{}) error {
+
 	client := RedisConnection()
-
-	expirationTime := 100000
-
-	err := client.Set(key, value, time.Duration(expirationTime)*time.Second).Err()
-
+	err := client.HMSet("details", userDetails).Err()
 	if err != nil {
-		fmt.Println("Error in inserting ", err)
-		return
-
+		log.Println("Error in Storing the user details to Redis ", err)
+		return err
 	}
-	fmt.Println("Inserting Successful")
+	return nil
+
 }
 
-func GetFromRedis(key string) string {
-
+// !GetUserDetailsFromRedis function will return the user details from redis
+func GetUserDetailsFromRedis() (map[string]string, error) {
 	client := RedisConnection()
-
-	ans, err := client.Get(key).Result()
-
+	hashKey := "details"
+	result, err := client.HGetAll(hashKey).Result()
 	if err != nil {
-		fmt.Println("Error in Fetching value from redis ", err)
+		log.Println("Error in retrieving the user details from Redis ", err)
+		return nil, err
 	}
-	fmt.Println("Value is ", ans)
-	return ans
+
+	userDetails := map[string]string{}
+	for key, value := range result {
+		userDetails[key] = value
+	}
+	return userDetails, nil
+
 }

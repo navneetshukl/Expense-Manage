@@ -9,7 +9,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/navneetshukl/database"
+	"github.com/navneetshukl/helpers"
 	"github.com/navneetshukl/models"
+	"github.com/navneetshukl/redis"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -56,9 +58,11 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
+	/* c.JSON(http.StatusOK, gin.H{
 		"message": "User Registered Successfully",
-	})
+	}) */
+
+	c.Redirect(http.StatusSeeOther, "/user/login")
 
 }
 
@@ -129,16 +133,35 @@ func Login(c *gin.Context) {
 	c.SetSameSite(http.SameSiteLaxMode)
 	c.SetCookie("Authorization", tokenString, int(time.Hour*24*30), "/", "", false, true)
 
-	c.JSON(http.StatusOK, gin.H{
+	//* Storing the name and email to the Redis
+
+	name, err := helpers.GetName(email)
+
+	if err != nil {
+		log.Println("Error in Getting the name of current login user ", err)
+	}
+	data := map[string]interface{}{
+		"email": email,
+		"name":  name,
+	}
+
+	err = redis.StoreUserDetailInRedis(data)
+	if err != nil {
+		log.Println("Error in storing the user details to redis in Login Handler ", err)
+	}
+
+	/* c.JSON(http.StatusOK, gin.H{
 		"message": "User Login Successfully",
-	})
+	}) */
+
+	c.Redirect(http.StatusSeeOther, "/expense")
 
 }
 
 // ! Signup will signup the user
 func Signup(c *gin.Context) {
 	c.SetSameSite(http.SameSiteLaxMode)
-	c.SetCookie("Authorization", "",-1, "/", "", false, true)
+	c.SetCookie("Authorization", "", -1, "/", "", false, true)
 
 	log.Println("I am on signup page")
 	c.Redirect(http.StatusSeeOther, "/user/login")

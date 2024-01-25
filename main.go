@@ -13,9 +13,9 @@ import (
 
 func init() {
 	database.MigrateDatabase()
-	redis.InsertIntoRedis("name", "navneet")
-	data := redis.GetFromRedis("name")
-	fmt.Println("Data from redis is ", data)
+	data,_:=redis.GetUserDetailsFromRedis()
+	fmt.Println("Data is ",data["email"])
+
 
 }
 func main() {
