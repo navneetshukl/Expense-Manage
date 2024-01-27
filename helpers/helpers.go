@@ -206,12 +206,13 @@ func GetExpenseForAnyMonth(month, category, email string) (interface{}, error) {
 		return nil, err
 	}
 
-	fmt.Println("Starartt ", startDate)
-	fmt.Println("Endddd ", endDate)
+	// fmt.Println("Starartt ", startDate)
+	// fmt.Println("Endddd ", endDate)
 
-	fmt.Println("Email from the 'GetPreviousExpense' is ",email)
+	// fmt.Println("Email from the 'GetPreviousExpense' is ",email)
+	// fmt.Println("Category from the 'GetPreviousExpense' is ",category)
 
-	if category == "Groccery" {
+	if category == /* "Groccery" */ "Grocerry" {
 
 		var grocData []models.Grocery
 		res := DB.Where("email=? and date>=? and date<=?", email, startDate, endDate).Find(&grocData)
