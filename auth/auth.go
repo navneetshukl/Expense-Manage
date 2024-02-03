@@ -58,10 +58,6 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	/* c.JSON(http.StatusOK, gin.H{
-		"message": "User Registered Successfully",
-	}) */
-
 	c.Redirect(http.StatusSeeOther, "/user/login")
 
 }
@@ -149,10 +145,6 @@ func Login(c *gin.Context) {
 	if err != nil {
 		log.Println("Error in storing the user details to redis in Login Handler ", err)
 	}
-
-	/* c.JSON(http.StatusOK, gin.H{
-		"message": "User Login Successfully",
-	}) */
 
 	c.Redirect(http.StatusSeeOther, "/expense")
 

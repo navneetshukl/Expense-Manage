@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/navneetshukl/helpers"
@@ -56,8 +57,11 @@ func Home(c *gin.Context) {
 	})
 
 	expLimit := (limit * 90) / 100
+	now := time.Now()
+	midnight := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location())
 
-	if total >= expLimit {
+	if total >= expLimit && now.Equal(midnight) {
+
 		_ = services.SendMail(email.(string))
 
 	}
@@ -134,6 +138,29 @@ func GetPreviousExpense(c *gin.Context) {
 	fmt.Println("Expense data from 'GetPreviousExpense' is ", data)
 	fmt.Println("Name from 'GetPreviousExpense' ", redisData["name"])
 
+	userName := redisData["name"]
+	var usedName string
+	if len(userName) == 0 {
+		Name, err := helpers.GetName(email.(string))
+		usedName = Name
+
+		if err != nil {
+			log.Println("Error in Getting the name of current login user ", err)
+		}
+		data := map[string]interface{}{
+			"email": email,
+			"name":  Name,
+		}
+
+		err = redis.StoreUserDetailInRedis(data)
+		if err != nil {
+			log.Println("Error in storing the user details to redis in Login Handler ", err)
+		}
+
+	} else {
+		usedName = userName
+	}
+
 	if err != nil {
 		log.Println("Error in getting the name ", err)
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -144,7 +171,7 @@ func GetPreviousExpense(c *gin.Context) {
 
 	c.HTML(http.StatusOK, "showprevexpense.page.tmpl", gin.H{
 		"expense":  data,
-		"name":     redisData["name"],
+		"name":     usedName,
 		"category": category,
 		"month":    month,
 	})
